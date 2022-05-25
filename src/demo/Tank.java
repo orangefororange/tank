@@ -13,13 +13,15 @@ public class Tank {
     private Direction direction = Direction.UP;
     //大小
     private int width=50,height=50;
+    private TankFrame tf;
     private boolean moving=false;
     private static final int SPEED = 10;
 
-    public Tank(int x, int y, Direction direction) {
+    public Tank(int x, int y, Direction direction,TankFrame tf) {
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.tf=tf;
     }
 
     public int getX() {
@@ -55,7 +57,10 @@ public class Tank {
     }
 
     public void paint(Graphics g){
+        Color color = g.getColor();
+        g.setColor(Color.BLACK);
         g.fillRect(x, y, this.width, this.height);
+        g.setColor(color);
         this.move();
 
     }
@@ -78,5 +83,9 @@ public class Tank {
             default:
                 break;
         }
+    }
+
+    public void fire() {
+        tf.bullets.add(new Bullet(x,y,direction,this.tf));
     }
 }

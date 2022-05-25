@@ -5,6 +5,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author spiltMilk
@@ -12,8 +14,9 @@ import java.awt.event.WindowEvent;
  */
 public class TankFrame extends Frame {
     static final int GAME_WIDTH=800,GAME_HEIGHT=600;
-    Tank myTank = new Tank(200, 200, Direction.DOWN);
-    Bullet bullet = new Bullet(300, 300, Direction.DOWN);
+    Tank myTank = new Tank(200, 200, Direction.DOWN,this);
+    List<Bullet> bullets=new ArrayList<>();
+//    Bullet bullet = new Bullet(300, 300, Direction.DOWN);
 
     public TankFrame() {
         this.setSize(GAME_WIDTH, GAME_HEIGHT);//设置大小，单位像素
@@ -31,10 +34,28 @@ public class TankFrame extends Frame {
         });
     }
 
+    Image offScreenImage=null;
+    @Override
+    public void update(Graphics g) {
+        if(offScreenImage==null){
+            offScreenImage=this.createImage(GAME_WIDTH,GAME_HEIGHT);
+        }
+        Graphics gOffScreen=offScreenImage.getGraphics();
+        Color c=gOffScreen.getColor();
+        gOffScreen.setColor(Color.WHITE);
+        gOffScreen.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+        gOffScreen.setColor(c);
+        paint(gOffScreen);
+        g.drawImage(offScreenImage,0,0,null );
+    }
+
     @Override
     public void paint(Graphics g) {
+        g.drawString("ss"+bullets.size(),300,300);
         myTank.paint(g);
-        bullet.paint(g);
+       for(int i=0;i<bullets.size();i++){
+           bullets.get(i).paint(g);
+       }
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -80,6 +101,9 @@ public class TankFrame extends Frame {
                 case KeyEvent.VK_RIGHT:
                     bR = false;
                     break;
+                    //ctrl键抬起 发射子弹
+                case KeyEvent.VK_CONTROL:
+                    myTank.fire();
                 default:
                     break;
             }

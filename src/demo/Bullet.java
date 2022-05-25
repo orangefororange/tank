@@ -9,8 +9,10 @@ import java.awt.*;
 public class Bullet {
     private static final int SPEED = 10;
     private int x, y;
-    private static int WIDTH=10,HEIGHT=10;
+    private static int WIDTH=20,HEIGHT=20 ;
     private Direction direction;
+    private boolean live=true;
+    private TankFrame tf;
 
     public int getX() {
         return x;
@@ -36,14 +38,18 @@ public class Bullet {
         this.direction = direction;
     }
 
-    public Bullet(int x, int y, Direction direction) {
+    public Bullet(int x, int y, Direction direction,TankFrame tf) {
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.tf=tf;
     }
 
 
     public void paint(Graphics g) {
+        if(!live){
+            tf.bullets.remove(this);
+        }
         Color color = g.getColor();
         g.setColor(Color.RED);
         g.fillOval(x, y, this.WIDTH, this.HEIGHT);
@@ -69,6 +75,7 @@ public class Bullet {
             default:
                 break;
         }
+        if(x<0||y<0||x>tf.GAME_WIDTH||y>tf.GAME_HEIGHT) live=false;
     }
 
 }
