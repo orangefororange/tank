@@ -1,6 +1,7 @@
 package demo;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * @author spiltMilk
@@ -15,6 +16,7 @@ public class Tank {
      * 坦克高度
      */
     public static int HEIGHT = ResourceMgr.tankU.getHeight();
+    private boolean living=true;
     //初始位置
     private int x = 200, y = 200;
     //方向
@@ -22,14 +24,25 @@ public class Tank {
     //大小
     private int width=50,height=50;
     private TankFrame tf;
-    private boolean moving=false;
-    private static final int SPEED = 10;
+    private boolean moving=true;
+    private static final int SPEED = 3;
+    private Random random=new Random();
+    private Group group=Group.BAD;
 
-    public Tank(int x, int y, Direction direction,TankFrame tf) {
+    public Tank(int x, int y, Direction direction,Group group,TankFrame tf) {
         this.x = x;
         this.y = y;
         this.direction = direction;
         this.tf=tf;
+        this.group=group;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public int getX() {
@@ -65,10 +78,7 @@ public class Tank {
     }
 
     public void paint(Graphics g){
-//        Color color = g.getColor();
-//        g.setColor(Color.BLACK);
-//        g.fillRect(x, y, this.width, this.height);
-//        g.setColor(color);
+        if(!living) tf.tanks.remove(this);
         switch (direction){
             case UP:
                 g.drawImage(ResourceMgr.tankU,x,y,null);
@@ -108,11 +118,17 @@ public class Tank {
             default:
                 break;
         }
+
+        if(random.nextInt(10)>8) this.fire();
     }
 
     public void fire() {
         int bx=this.x+Tank.WIDTH/2-Bullet.WIDTH/2;
         int by=this.y+Tank.HEIGHT/2-Bullet.HEIGHT/2;
-        tf.bullets.add(new Bullet(bx,by,direction,this.tf));
+        tf.bullets.add(new Bullet(bx,by,direction,this.group,this.tf));
+    }
+
+    public void die() {
+        this.living=false;
     }
 }

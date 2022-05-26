@@ -18,8 +18,9 @@ public class Bullet {
     public static int HEIGHT = ResourceMgr.bulletD.getHeight();
     private Direction direction;
     private int x, y;
-    private boolean live = true;
+    private boolean living = true;
     private TankFrame tf;
+    private Group group=Group.BAD;
 
     public int getX() {
         return x;
@@ -45,16 +46,17 @@ public class Bullet {
         this.direction = direction;
     }
 
-    public Bullet(int x, int y, Direction direction, TankFrame tf) {
+    public Bullet(int x, int y, Direction direction, Group group,TankFrame tf) {
         this.x = x;
         this.y = y;
         this.direction = direction;
         this.tf = tf;
+        this.group=group;
     }
 
 
     public void paint(Graphics g) {
-        if (!live) {
+        if (!living) {
             tf.bullets.remove(this);
         }
 //        Color color = g.getColor();
@@ -80,6 +82,13 @@ public class Bullet {
         this.move();
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
 
     private void move() {
         switch (direction) {
@@ -98,7 +107,23 @@ public class Bullet {
             default:
                 break;
         }
-        if (x < 0 || y < 0 || x > tf.GAME_WIDTH || y > tf.GAME_HEIGHT) live = false;
+        if (x < 0 || y < 0 || x > tf.GAME_WIDTH || y > tf.GAME_HEIGHT) living = false;
+    }
+
+    public void collideWith(Tank tank){
+        if(this.group==tank.getGroup())return;
+        //todo 用一个rect记录子弹的位置
+        Rectangle rect1=new Rectangle(this.x,this.y,WIDTH,HEIGHT);
+        Rectangle rect2=new Rectangle(tank.getX(),tank.getY(),Tank.WIDTH,Tank.HEIGHT);
+        if(rect1.intersects(rect2)){
+            tank.die();
+            this.die();
+        }
+
+    }
+
+    private void die() {
+        this.living =false;
     }
 
 }
