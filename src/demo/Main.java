@@ -13,7 +13,7 @@ public class Main {
         }
         //刷新窗口
         while (true){
-            Thread.sleep(50);
+            Thread.sleep(25);
             tankFrame.repaint();
         }
     }
