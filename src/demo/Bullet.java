@@ -8,10 +8,17 @@ import java.awt.*;
  */
 public class Bullet {
     private static final int SPEED = 10;
-    private int x, y;
-    private static int WIDTH=20,HEIGHT=20 ;
+    /**
+     * 子弹宽度
+     */
+    public static int WIDTH = ResourceMgr.bulletD.getWidth();
+    /**
+     * 子弹高度
+     */
+    public static int HEIGHT = ResourceMgr.bulletD.getHeight();
     private Direction direction;
-    private boolean live=true;
+    private int x, y;
+    private boolean live = true;
     private TankFrame tf;
 
     public int getX() {
@@ -38,27 +45,43 @@ public class Bullet {
         this.direction = direction;
     }
 
-    public Bullet(int x, int y, Direction direction,TankFrame tf) {
+    public Bullet(int x, int y, Direction direction, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.direction = direction;
-        this.tf=tf;
+        this.tf = tf;
     }
 
 
     public void paint(Graphics g) {
-        if(!live){
+        if (!live) {
             tf.bullets.remove(this);
         }
-        Color color = g.getColor();
-        g.setColor(Color.RED);
-        g.fillOval(x, y, this.WIDTH, this.HEIGHT);
-        g.setColor(color);
+//        Color color = g.getColor();
+//        g.setColor(Color.RED);
+//        g.fillOval(x, y, this.WIDTH, this.HEIGHT);
+//        g.setColor(color);
+        switch (direction) {
+            case UP:
+                g.drawImage(ResourceMgr.bulletU, x, y, null);
+                break;
+            case DOWN:
+                g.drawImage(ResourceMgr.bulletD, x, y, null);
+                break;
+            case LEFT:
+                g.drawImage(ResourceMgr.bulletL, x, y, null);
+                break;
+            case RIGHT:
+                g.drawImage(ResourceMgr.bulletR, x, y, null);
+                break;
+            default:
+                break;
+        }
         this.move();
     }
 
 
-    private void move(){
+    private void move() {
         switch (direction) {
             case UP:
                 y -= SPEED;
@@ -75,7 +98,7 @@ public class Bullet {
             default:
                 break;
         }
-        if(x<0||y<0||x>tf.GAME_WIDTH||y>tf.GAME_HEIGHT) live=false;
+        if (x < 0 || y < 0 || x > tf.GAME_WIDTH || y > tf.GAME_HEIGHT) live = false;
     }
 
 }

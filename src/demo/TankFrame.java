@@ -13,9 +13,9 @@ import java.util.List;
  * @date 2022/5/21
  */
 public class TankFrame extends Frame {
-    static final int GAME_WIDTH=800,GAME_HEIGHT=600;
-    Tank myTank = new Tank(200, 200, Direction.DOWN,this);
-    List<Bullet> bullets=new ArrayList<>();
+    static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
+    Tank myTank = new Tank(200, 200, Direction.DOWN, this);
+    List<Bullet> bullets = new ArrayList<>();
 //    Bullet bullet = new Bullet(300, 300, Direction.DOWN);
 
     public TankFrame() {
@@ -34,28 +34,29 @@ public class TankFrame extends Frame {
         });
     }
 
-    Image offScreenImage=null;
+    Image offScreenImage = null;
+
     @Override
     public void update(Graphics g) {
-        if(offScreenImage==null){
-            offScreenImage=this.createImage(GAME_WIDTH,GAME_HEIGHT);
+        if (offScreenImage == null) {
+            offScreenImage = this.createImage(GAME_WIDTH, GAME_HEIGHT);
         }
-        Graphics gOffScreen=offScreenImage.getGraphics();
-        Color c=gOffScreen.getColor();
-        gOffScreen.setColor(Color.WHITE);
-        gOffScreen.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+        Graphics gOffScreen = offScreenImage.getGraphics();
+        Color c = gOffScreen.getColor();
+        gOffScreen.setColor(Color.BLACK);
+        gOffScreen.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
         gOffScreen.setColor(c);
         paint(gOffScreen);
-        g.drawImage(offScreenImage,0,0,null );
+        g.drawImage(offScreenImage, 0, 0, null);
     }
 
     @Override
     public void paint(Graphics g) {
-        g.drawString("ss"+bullets.size(),300,300);
         myTank.paint(g);
-       for(int i=0;i<bullets.size();i++){
-           bullets.get(i).paint(g);
-       }
+        //todo 写完修改，用iterator删除元素，这个方式，在移除子弹的瞬间会丢失一颗子弹的绘制，后续正常
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).paint(g);
+        }
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -101,7 +102,7 @@ public class TankFrame extends Frame {
                 case KeyEvent.VK_RIGHT:
                     bR = false;
                     break;
-                    //ctrl键抬起 发射子弹
+                //ctrl键抬起 发射子弹
                 case KeyEvent.VK_CONTROL:
                     myTank.fire();
                 default:

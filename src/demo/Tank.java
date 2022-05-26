@@ -7,6 +7,14 @@ import java.awt.*;
  * @date 2022/5/22
  */
 public class Tank {
+    /**
+     * 坦克宽度
+     */
+    public static int WIDTH = ResourceMgr.tankU.getWidth();
+    /**
+     * 坦克高度
+     */
+    public static int HEIGHT = ResourceMgr.tankU.getHeight();
     //初始位置
     private int x = 200, y = 200;
     //方向
@@ -57,10 +65,27 @@ public class Tank {
     }
 
     public void paint(Graphics g){
-        Color color = g.getColor();
-        g.setColor(Color.BLACK);
-        g.fillRect(x, y, this.width, this.height);
-        g.setColor(color);
+//        Color color = g.getColor();
+//        g.setColor(Color.BLACK);
+//        g.fillRect(x, y, this.width, this.height);
+//        g.setColor(color);
+        switch (direction){
+            case UP:
+                g.drawImage(ResourceMgr.tankU,x,y,null);
+                break;
+            case DOWN:
+                g.drawImage(ResourceMgr.tankD,x,y,null);
+                break;
+            case LEFT:
+                g.drawImage(ResourceMgr.tankL,x,y,null);
+                break;
+            case RIGHT:
+                g.drawImage(ResourceMgr.tankR,x,y,null);
+                break;
+            default:
+                break;
+        }
+
         this.move();
 
     }
@@ -86,6 +111,8 @@ public class Tank {
     }
 
     public void fire() {
-        tf.bullets.add(new Bullet(x,y,direction,this.tf));
+        int bx=this.x+Tank.WIDTH/2-Bullet.WIDTH/2;
+        int by=this.y+Tank.HEIGHT/2-Bullet.HEIGHT/2;
+        tf.bullets.add(new Bullet(bx,by,direction,this.tf));
     }
 }
