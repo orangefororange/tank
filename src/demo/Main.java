@@ -7,8 +7,9 @@ package demo;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         TankFrame tankFrame = new TankFrame();
+        int initTankCount=PropertyMgr.getInt("initTankCount");
         //初始化地方坦克
-        for(int i=0;i<5;i++){
+        for(int i=0;i<initTankCount;i++){
             tankFrame.tanks.add(new Tank(50+i*60,200,Direction.DOWN,Group.BAD,tankFrame));
         }
         //刷新窗口

@@ -21,6 +21,7 @@ public class Bullet {
     private boolean living = true;
     private TankFrame tf;
     private Group group=Group.BAD;
+    Rectangle rect=new Rectangle();
 
     public int getX() {
         return x;
@@ -52,6 +53,10 @@ public class Bullet {
         this.direction = direction;
         this.tf = tf;
         this.group=group;
+        rect.x=this.x;
+        rect.y=this.y;
+        rect.width=WIDTH;
+        rect.height=HEIGHT;
     }
 
 
@@ -59,10 +64,6 @@ public class Bullet {
         if (!living) {
             tf.bullets.remove(this);
         }
-//        Color color = g.getColor();
-//        g.setColor(Color.RED);
-//        g.fillOval(x, y, this.WIDTH, this.HEIGHT);
-//        g.setColor(color);
         switch (direction) {
             case UP:
                 g.drawImage(ResourceMgr.bulletU, x, y, null);
@@ -107,18 +108,19 @@ public class Bullet {
             default:
                 break;
         }
+        rect.x=this.x;
+        rect.y=this.y;
         if (x < 0 || y < 0 || x > tf.GAME_WIDTH || y > tf.GAME_HEIGHT) living = false;
     }
 
     public void collideWith(Tank tank){
         if(this.group==tank.getGroup())return;
-        //todo 用一个rect记录子弹的位置
-        Rectangle rect1=new Rectangle(this.x,this.y,WIDTH,HEIGHT);
-        Rectangle rect2=new Rectangle(tank.getX(),tank.getY(),Tank.WIDTH,Tank.HEIGHT);
-        if(rect1.intersects(rect2)){
+        if(rect.intersects(tank.rect)){
             tank.die();
             this.die();
-            tf.explodes.add(new Explode(x,y,tf));
+            int ex=tank.getX()+Tank.WIDTH/2-Explode.WIDTH/2;
+            int ey=tank.getY()+Tank.HEIGHT/2-Explode.HEIGHT/2;
+            tf.explodes.add(new Explode(ex,ey,tf));
         }
 
     }
